@@ -1,0 +1,56 @@
+file_name = 'bitly.tsv'
+'''
+list all cities from the file
+'''
+geo_city_name = set([])
+with open(file_name, "r") as fh:
+    next(fh)                                 # skip the first row which contains the header info
+    for line in fh:
+        city_name = line.split('\t')[3]      # split the row by tab to get the city_name
+        if (len(city_name) > 0):             # do not add if the city name is blank
+            geo_city_name.add(city_name)
+print "Geo City in ascending order"
+for city in sorted(geo_city_name, key=str.lower):
+    print "{city}".format(city=city)
+'''
+ find the top ten country codes in the file
+'''
+country_code = ""
+cc_dict = {}
+with open(file_name, "r") as fh:
+    next(fh)                                 # skip the first row which contains the header info
+    for line in fh:
+        country_code = line.split('\t')[4]      # split the row by tab to get the country code
+        if (len(country_code) > 0):             # do not add if the city name is blank
+            if (cc_dict.has_key(country_code)):
+                current_value = cc_dict.get(country_code)
+            else:
+                current_value = 0
+            cc_dict[country_code] = current_value + 1
+
+print "\n\nTop Ten Country Code" + (' ' * 5) + "Total  "
+for country,value in sorted(cc_dict.items(), key=lambda kv: kv[1],reverse=True)[0:10]:
+    print "{country}".format(country=country) + (' ' * 23) + "{value:3,d}".format(value=value)
+
+'''
+  list the top ten urls
+'''
+country_code = ""
+url_dict = {}
+with open(file_name, "r") as fh:
+    next(fh)                                 # skip the first row which contains the header info
+    for line in fh:
+        long_url = line.split('\t')[2].split("/")[2]      # split the row by tab to get the country code
+        if (len(long_url) > 0):             # do not add if the city name is blank
+            url = long_url.split("?")[0]
+            if (url_dict.has_key(url)):
+                current_value = url_dict.get(url)
+            else:
+                current_value = 0
+            url_dict[url] = current_value + 1
+
+print "\n\nTop Ten URL" + (' ' * 123) + "Total  "
+for url,value in sorted(url_dict.items(), key=lambda kv: kv[1],reverse=True)[0:10]:
+    print "{url}".format(url=url.ljust(84,' ')) + (' ' * 50) + "{value:3,d}".format(value=value)
+
+
