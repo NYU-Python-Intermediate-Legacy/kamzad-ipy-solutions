@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import os
 import sys 
+# Kayum Amzad
 class Config(object):
     config_dict = {}
     def __init__(self, filename="myfile.txt", overwrite_keys = True):
