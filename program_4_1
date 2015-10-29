@@ -1,0 +1,63 @@
+#!/usr/bin/python
+import os
+import sys
+import time
+class Logger(object):
+    DEBUG = 5
+    INFO = 4
+    WARNING = 3
+    ERROR = 2
+    CRITICAL = 1
+    def __init__(self, filename="logfile.txt", priority=DEBUG,datetime=True,scriptname=True):
+        self.filename = filename
+        self.priority = priority
+        self.datetime = datetime
+        self.scriptname = scriptname
+        self.filename = open(filename, 'a')
+
+    def getFilename(self):
+        return self.filename
+
+    def getPriority(self):
+        return self.priority
+    def getDatetime(self):
+        if self.datetime:
+           return time.ctime()
+        return ''
+
+    def getScriptName(self):
+        if self.scriptname:
+           return os.path.basename(sys.argv[0])
+        return ''
+    def debug(self,st):
+        self.getFilename().write("DEBUG    "+st)
+    def info(self,st):
+        self.getFilename().write("INFO     "+st)
+    def warning(self,st):
+        self.getFilename().write("WARNING  "+st)
+    def error(self,st):
+        self.getFilename().write("ERROR    "+st)
+    def critical(self,st):
+        self.getFilename().write("CRITICAL "+st)
+    def Logger(self,st):
+        st = "{datetime} {scriptname} {text}".format(datetime=self.getDatetime(),scriptname=self.getScriptName(),text=st)
+
+        if self.priority >= self.DEBUG:
+           self.debug(st + "\n")
+        if self.priority >= self.INFO:
+           self.info(st + "\n")
+        if self.priority >= self.WARNING:
+           self.warning(st + "\n")
+        if self.priority >= self.ERROR:
+           self.error(st + "\n")
+        if self.priority >= self.CRITICAL:
+           self.critical(st + "\n")
+
+def main(argv):
+    log = Logger ("logfile.txt",Logger.INFO,datetime=True)
+    print "Priority = ",log.getPriority()
+    st = "This is a test for logging"
+    log.Logger(st)
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
